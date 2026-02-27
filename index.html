@@ -192,9 +192,8 @@
         });
 
         // 5. Google Sheet + WhatsApp Redirect
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbwp9yeCFC_ZfOVbkaLtxpYLYGEJv6iJsq_WLXQL7EAlpVX22AuFG1wB64izYQF8D7xwUA/exec'; 
-        const form = document.getElementById('lead-form');
-
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwp9yeCFC_ZfOVbkaLtxpYLYGEJv6iJsq_WLXQL7EAlpVX22AuFG1wB64izYQF8D7xwUA/exec';
+        const form = document.getElementById('maLeadForm');
         form.addEventListener('submit', e => {
             e.preventDefault();
             const btn = document.getElementById('sub-btn');
