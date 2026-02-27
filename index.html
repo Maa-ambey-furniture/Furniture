@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maa Ambey Furniture | Happy Holi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@800&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --accent: #c5a059;
+            --goozey-red: #ff004f;
+        }
+
+        /* --- CSS Reset & Layout --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: #ffffff; overflow-x: hidden; color: #333; display: flex; flex-direction: column; min-height: 100vh; }
+
+        /* --- 1. HOLI SPECIAL WELCOME SCREEN --- */
+        #welcome-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000 url('https://media.giphy.com/media/l0He8X3T5h5078s0M/giphy.gif') center/cover no-repeat;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 9999; transition: 0.8s ease-out;
+        }
+        .holi-card { 
+            text-align: center; background: rgba(0, 0, 0, 0.75); 
+            padding: 40px; border-radius: 25px; border: 1px solid var(--accent);
+            backdrop-filter: blur(10px); color: white;
+        }
+        #timer { display: flex; gap: 10px; justify-content: center; margin: 20px 0; }
+        .t-box { background: var(--accent); padding: 10px; border-radius: 8px; min-width: 60px; font-weight: bold; }
+        .hide-overlay { opacity: 0; visibility: hidden; transform: scale(1.1); }
+
+        /* --- 2. HEADER & NAVIGATION (FIXED) --- */
+        header {
+            background: #fff; padding: 15px 5%; 
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000;
+        }
+        .logo { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--primary); font-weight: 800; text-decoration: none; }
+        
+        nav ul { list-style: none; display: flex; gap: 30px; align-items: center; }
+        nav a { color: var(--primary); text-decoration: none; font-size: 15px; font-weight: 500; cursor: pointer; transition: 0.3s; }
+        .contact-trigger { color: var(--goozey-red) !important; font-weight: 600 !important; cursor: pointer; }
+
+        .menu-btn { display: none; font-size: 24px; cursor: pointer; }
+
+        /* --- 3. GOOZEY STYLE ACCORDION --- */
+        main { flex: 1; padding: 60px 5%; max-width: 850px; margin: 0 auto; width: 100%; }
+        .section-title { font-family: 'Playfair Display', serif; text-align: center; margin-bottom: 40px; font-size: 34px; color: var(--primary); }
+
+        .acc-item { border: 1px solid #eee; border-radius: 12px; margin-bottom: 15px; overflow: hidden; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .acc-header {
+            padding: 22px; cursor: pointer; display: flex; justify-content: space-between;
+            font-weight: 600; align-items: center; transition: 0.3s; font-size: 17px;
+        }
+        /* Active State (Goozey Red Style) */
+        .acc-item.active { border-color: var(--goozey-red); box-shadow: 0 8px 20px rgba(255, 0, 79, 0.1); }
+        .acc-item.active .acc-header { background: var(--goozey-red); color: white; }
+        
+        .acc-content { padding: 0 22px; max-height: 0; overflow: hidden; transition: 0.4s ease-out; color: #555; line-height: 1.7; font-size: 15px; }
+        .acc-item.active .acc-content { padding: 22px; max-height: 300px; }
+
+        /* --- 4. POPUP MODAL (QUICK ENQUIRY) --- */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 2000; backdrop-filter: blur(8px); }
+        .modal-card { background: white; width: 95%; max-width: 450px; padding: 40px; border-radius: 25px; position: relative; animation: popUp 0.4s ease; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+        @keyframes popUp { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .close { position: absolute; top: 15px; right: 20px; font-size: 30px; cursor: pointer; color: #aaa; }
+        
+        .modal-card h3 { font-family: 'Playfair Display', serif; text-align: center; font-size: 28px; margin-bottom: 25px; color: var(--primary); }
+        .modal-card input, .modal-card textarea { width: 100%; padding: 14px; margin-bottom: 18px; border: 1px solid #e2e8f0; border-radius: 12px; outline: none; font-size: 15px; }
+        .sub-btn { width: 100%; padding: 16px; background: #25d366; color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
+
+        /* --- 5. FOOTER --- */
+        footer { background: #111; color: #ccc; padding: 50px 5% 20px; border-top: 4px solid var(--accent); margin-top: 50px; }
+        .f-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; }
+        .f-gold { color: var(--accent); font-weight: bold; margin-bottom: 15px; display: block; font-size: 18px; }
+
+        @media (max-width: 768px) {
+            nav ul { display: none; flex-direction: column; width: 100%; position: absolute; top: 75px; left: 0; background: #fff; padding: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+            nav ul.show { display: flex; }
+            .menu-btn { display: block; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="welcome-overlay">
+        <div class="holi-card">
+            <h1 style="font-family:'Playfair Display'; font-size: 35px;">Maa Ambey Furniture</h1>
+            <p style="color:var(--accent); font-weight:bold; letter-spacing:2px; margin-top:10px;">HAPPY HOLI</p>
+            <div id="timer">
+                <div class="t-box"><span id="d">00</span><br><small>Days</small></div>
+                <div class="t-box"><span id="h">00</span><br><small>Hrs</small></div>
+                <div class="t-box"><span id="m">00</span><br><small>Mins</small></div>
+            </div>
+            <div style="width:100%; height:4px; background:#222; border-radius:10px; overflow:hidden;">
+                <div id="pb" style="width:0%; height:100%; background:var(--accent); transition:0.1s;"></div>
+            </div>
+        </div>
+    </div>
+
+    <header>
+        <a href="#" class="logo">Maa Ambey Furniture</a>
+        <div class="menu-btn" onclick="toggleMenu()">☰</div>
+        <nav>
+            <ul id="nav-links">
+                <li><a href="#">Showroom</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><span class="contact-trigger" onclick="openModal()">📞 Contact Us</span></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="services">
+        <h2 class="section-title">What We Offer?</h2>
+        
+        <div class="acc-item">
+            <div class="acc-header">Drilling & Hanging Service <span>▼</span></div>
+            <div class="acc-content">Get Drilling & Nail on Walls for Placing Photo Frame, Mirror & all Type of Hanging. Just Book Our Carpenter and Get the Service. Ajmer's best furniture expert.</div>
+        </div>
+
+        <div class="acc-item active">
+            <div class="acc-header">Door Repair Service <span>▼</span></div>
+            <div class="acc-content">Expert door repair, lock fitting, and hinge adjustment. Hum banate hain aapke ghar ko surakshit aur sundar.</div>
+        </div>
+
+        <div class="acc-item">
+            <div class="acc-header">Furniture Making & Interior Work <span>▼</span></div>
+            <div class="acc-content">Complete home interior solutions, customized wardrobes, aur premium furniture making directly from our Ajmer showroom.</div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="f-grid">
+            <div><span class="f-gold">Maa Ambey Furniture</span><p>Ajmer ka premium furniture house. Quality jo chale peedhiyon tak.</p></div>
+            <div><span class="f-gold">Contact</span><p>📍 Ajmer, Rajasthan</p><p>📞 +91 98XXX XXXXX</p></div>
+        </div>
+    </footer>
+
+    <div class="modal" id="contactModal">
+        <div class="modal-card">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3>Quick Enquiry</h3>
+            <form id="lead-form">
+                <input type="text" name="Name" id="u_name" placeholder="Your Full Name" required>
+                <input type="text" name="Phone" id="u_phone" placeholder="WhatsApp Number" required>
+                <textarea name="Message" id="u_msg" placeholder="How can we help you?" rows="3"></textarea>
+                <button type="submit" class="submit-btn" id="sub-btn">Submit & Chat on WhatsApp</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 1. Timer Logic
+        function updateT() {
+            const hDate = new Date("March 4, 2026 00:00:00").getTime();
+            const now = new Date().getTime();
+            const d = hDate - now;
+            document.getElementById("d").innerText = Math.floor(d / (1000 * 60 * 60 * 24));
+            document.getElementById("h").innerText = Math.floor((d % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            document.getElementById("m").innerText = Math.floor((d % (1000 * 60 * 60)) / (1000 * 60));
+        }
+        setInterval(updateT, 1000);
+
+        // 2. Welcome Fade
+        window.addEventListener('load', () => {
+            let p = 0; const b = document.getElementById('pb');
+            const int = setInterval(() => {
+                p += 2; b.style.width = p + "%";
+                if(p >= 100) {
+                    clearInterval(int);
+                    setTimeout(() => document.getElementById('welcome-overlay').classList.add('hide-overlay'), 500);
+                }
+            }, 30);
+        });
+
+        // 3. UI Controls
+        function openModal() { document.getElementById('contactModal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('contactModal').style.display = 'none'; }
+        function toggleMenu() { document.getElementById('nav-links').classList.toggle('show'); }
+        
+        // 4. Accordion Logic (UP-DOWN FIXED)
+        document.querySelectorAll('.acc-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const item = header.parentElement;
+                const isOpen = item.classList.contains('active');
+                document.querySelectorAll('.acc-item').forEach(i => i.classList.remove('active'));
+                if(!isOpen) item.classList.add('active');
+            });
+        });
+
+        // 5. Google Sheet + WhatsApp Redirect
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwp9yeCFC_ZfOVbkaLtxpYLYGEJv6iJsq_WLXQL7EAlpVX22AuFG1wB64izYQF8D7xwUA/exec'; 
+        const form = document.getElementById('lead-form');
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            const btn = document.getElementById('sub-btn');
+            btn.innerHTML = "Processing...";
+            btn.disabled = true;
+
+            fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+                .then(response => {
+                    const name = document.getElementById('u_name').value;
+                    const phone = document.getElementById('u_phone').value;
+                    const msg = document.getElementById('u_msg').value;
+                    const waURL = `https://wa.me/918078619566?text=*Lead: Maa Ambey*%0A*Name:* ${name}%0A*Phone:* ${phone}%0A*Msg:* ${msg}`;
+                    window.open(waURL, '_blank');
+                    closeModal(); form.reset();
+                    btn.innerHTML = "Submit & Chat on WhatsApp";
+                    btn.disabled = false;
+                }).catch(() => {
+                    alert('Error! Google Script URL check karein.');
+                    btn.disabled = false;
+                });
+        });
+    </script>
+</body>
+</html>
