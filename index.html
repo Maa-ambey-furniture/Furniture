@@ -151,7 +151,47 @@
             </form>
         </div>
     </div>
+<script>
+        // YAHAN PASTE KAREIN (Script ke andar)
 
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwp9yeCFC_ZfOVbkaLtxpYLYGEJv6iJsq_WLXQL7EAlpVX22AuFG1wB64izYQF8D7xwUA/exec';
+        const form = document.getElementById('maLeadForm');
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            const btn = document.getElementById('subBtn');
+            btn.innerHTML = "Processing...";
+            btn.disabled = true;
+
+            // 1. Google Sheet mein data bhej raha hai
+            fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+                .then(response => {
+                    // Inputs se data nikaalna
+                    const name = document.getElementById('userName').value;
+                    const phone = document.getElementById('userPhone').value;
+                    const msg = document.getElementById('userMsg').value;
+                    
+                    // 2. WhatsApp message ko encode karke link banana
+                    const encodedText = encodeURIComponent(`*New Enquiry*\n*Name:* ${name}\n*Phone:* ${phone}\n*Message:* ${msg}`);
+                    const waURL = `https://wa.me/918078619566?text=${encodedText}`;
+                    
+                    // 3. WhatsApp par redirect karna
+                    window.open(waURL, '_blank');
+
+                    // Reset aur Cleanup
+                    closeMaPopup();
+                    form.reset();
+                    btn.innerHTML = "Submit & Chat on WhatsApp";
+                    btn.disabled = false;
+                })
+                .catch(error => {
+                    alert('Error! Check your Google Script URL.');
+                    btn.disabled = false;
+                });
+        });
+    </script>
+</body>
+</html>
     <script>
         // 1. Timer Logic
         function updateT() {
@@ -205,7 +245,7 @@
                     const name = document.getElementById('u_name').value;
                     const phone = document.getElementById('u_phone').value;
                     const msg = document.getElementById('u_msg').value;
-                    const waURL = `https://wa.me/918078619566?text=*Lead: Maa Ambey*%0A*Name:* ${name}%0A*Phone:* ${phone}%0A*Msg:* ${msg}`;
+                    const waURL = `https://wa.me/  ?text=*Lead: Maa Ambey*%0A*Name:* ${name}%0A*Phone:* ${phone}%0A*Msg:* ${msg}`;
                     window.open(waURL, '_blank');
                     closeModal(); form.reset();
                     btn.innerHTML = "Submit & Chat on WhatsApp";
