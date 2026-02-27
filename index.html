@@ -179,7 +179,6 @@
         
         form.addEventListener('submit', e => {
             e.preventDefault();
-            alert("JavaScript Trigger Ho Gayi!"); // <--- Ye line add karein testing ke liye
     // ... baaki ka fetch code ...
             const btn = document.getElementById('sub-btn');
             btn.innerHTML = "Processing...";
@@ -192,7 +191,7 @@
                     const msg = document.getElementById('u_msg').value;
                     
                     // WhatsApp Link Encoding
-                    const encodedText = encodeURIComponent(`*Lead: Maa Ambey*\n*Name:* ${name}\n*Phone:* ${phone}\n*Msg:* ${msg}`);
+                    const encodedText = encodeURIComponent(`*Lead: Maa Ambey Furniture*\n*Name:* ${name}\n*Phone:* ${phone}\n*Msg:* ${msg}`);
                     const waURL = `https://wa.me/918078619566?text=${encodedText}`;
                     
                     window.open(waURL, '_blank');
