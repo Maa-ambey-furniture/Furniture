@@ -179,6 +179,8 @@
         
         form.addEventListener('submit', e => {
             e.preventDefault();
+            alert("JavaScript Trigger Ho Gayi!"); // <--- Ye line add karein testing ke liye
+    // ... baaki ka fetch code ...
             const btn = document.getElementById('sub-btn');
             btn.innerHTML = "Processing...";
             btn.disabled = true;
