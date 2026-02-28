@@ -122,7 +122,7 @@
         const formData = new FormData();
         formData.append('name', name); formData.append('phone', phone); formData.append('service', service);
 
-        fetch('YOUR_APPS_SCRIPT_URL_HERE', { method: 'POST', body: formData })
+        fetch('  ', { method: 'POST', body: formData })
         .then(() => {
             alert("Dhanyawad! Form save ho gaya hai.");
             const waLink = `https://wa.me/91XXXXXXXXXX?text=Pranam!%0AName: ${name}%0APhone: ${phone}%0AService: ${service}`;
@@ -152,14 +152,28 @@
         if(document.getElementById('holiOverlay').style.display !== 'none') requestAnimationFrame(animate);
     }
     function startExperience() {
-        document.getElementById('holiMusic').play();
-        document.querySelector('.play-btn').style.display='none';
-        animate(); setInterval(createDrop, 400);
-        setTimeout(() => {
-            document.getElementById('holiOverlay').style.opacity = '0';
-            setTimeout(() => { document.getElementById('holiOverlay').style.display = 'none'; }, 1500);
-        }, 10000);
-    }
+    const music = document.getElementById('holiMusic');
+    music.play();
+    
+    document.querySelector('.play-btn').style.display = 'none';
+    animate(); // Smoke shuru
+    setInterval(createDrop, 400); // Gulaal shuru
+
+    // Exact 10 second baad sab band karne ka logic
+    setTimeout(() => {
+        const overlay = document.getElementById('holiOverlay');
+        overlay.style.opacity = '0'; // Dhire se gayab hoga
+        
+        setTimeout(() => { 
+            overlay.style.display = 'none'; 
+            
+            // --- MUSIC STOP LOGIC ---
+            music.pause(); 
+            music.currentTime = 0; // Shuruat par wapas le jao
+            console.log("Music Stopped for Maa Ambey Site");
+        }, 1500); // Overlay animation khatam hone ka wait
+    }, 10000); // 10 second ka total time
+}
     function createDrop() {
         const container = document.getElementById('colorContainer');
         const drop = document.createElement('div');
