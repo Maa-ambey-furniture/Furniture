@@ -5,56 +5,97 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MAA AMBEY - Secure Admin</title>
     <style>
-        :root { --primary: #ff4b2b; --bg: #0f172a; --card: rgba(30, 41, 59, 0.8); --text: #f8fafc; }
+        :root { 
+            --primary: #ff4b2b; --bg: #0f172a; 
+            --card: rgba(30, 41, 59, 0.8); --text: #f8fafc; 
+            --border: rgba(255,255,255,0.1);
+        }
+
+        /* ☀️ Day Mode Colors */
+        .light-mode {
+            --bg: #f1f5f9; --card: #ffffff; 
+            --text: #1e293b; --border: #cbd5e1;
+        }
+        
         body { 
             background: var(--bg); color: var(--text); 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            margin: 0; padding: 10px; display:none; /* Shuru mein hidden rahega */
+            font-family: 'Segoe UI', sans-serif; margin: 0; 
+            display: flex; align-items: center; justify-content: center; min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
         }
+
+        /* --- Login Card --- */
+        .login-card {
+            background: var(--card); backdrop-filter: blur(15px);
+            padding: 40px; border-radius: 20px; border: 1px solid var(--border);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3); width: 90%; max-width: 350px; text-align: center;
+        }
+        input {
+            width: 100%; padding: 12px; margin-bottom: 15px; background: rgba(0,0,0,0.05);
+            border: 1px solid var(--border); border-radius: 8px; color: var(--text);
+            box-sizing: border-box;
+        }
+
+        /* --- Dashboard Container --- */
+        #dashboardContent { display: none; width: 100%; padding: 20px; box-sizing: border-box; }
         .dashboard-container { 
             max-width: 1000px; margin: auto; background: var(--card); 
-            backdrop-filter: blur(15px); border-radius: 15px; padding: 15px; 
-            border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-radius: 15px; padding: 15px; border: 1px solid var(--border);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
+        
         .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
-        h2 { font-size: 1.3rem; margin: 0; color: var(--primary); }
+        
+        .btn-group { display: flex; gap: 8px; }
         .refresh-btn { background: var(--primary); border: none; color: white; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        .info-bar { font-size: 12px; color: #94a3b8; margin-bottom: 15px; display: flex; justify-content: space-between; }
-        .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 10px; }
+        
+        /* Theme Toggle Button */
+        .theme-toggle { 
+            background: transparent; border: 1px solid var(--primary); 
+            color: var(--primary); padding: 7px 12px; border-radius: 8px; cursor: pointer; 
+        }
+
+        .table-responsive { width: 100%; overflow-x: auto; border-radius: 10px; }
         table { width: 100%; border-collapse: collapse; min-width: 600px; }
-        th { text-align: left; padding: 12px; border-bottom: 2px solid var(--primary); font-size: 11px; text-transform: uppercase; color: #64748b; }
-        td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; }
-        .actions { display: flex; gap: 8px; }
-        .btn-wa { background: #22c55e; color: white; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 11px; font-weight: bold; }
+        th { text-align: left; padding: 12px; border-bottom: 2px solid var(--primary); font-size: 11px; color: #64748b; }
+        td { padding: 12px; border-bottom: 1px solid var(--border); font-size: 13px; }
+        
+        .btn-wa { background: #22c55e; color: white; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 11px; }
         .btn-del { background: #ef4444; border: none; color: white; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; }
-        @media (max-width: 600px) { h2 { font-size: 1.1rem; } td, th { padding: 10px 5px; } }
     </style>
 </head>
-<body id="adminBody">
+<body id="mainBody">
 
-<div class="dashboard-container">
-    <div class="header-flex">
-        <h2>🛋️ Maa Ambey Admin</h2>
-        <button class="refresh-btn" onclick="fetchLeads()">🔄 Refresh</button>
+    <div id="loginSection" class="login-card">
+        <h2 style="color:var(--primary);">🛋️ MAA AMBEY</h2>
+        <input type="password" id="inputKey" placeholder="Security Key">
+        <input type="password" id="inputPass" placeholder="Admin Password">
+        <button style="width:100%; padding:12px; background:var(--primary); border:none; color:white; border-radius:8px; font-weight:bold; cursor:pointer;" onclick="checkAccess()">Login</button>
     </div>
-    <div class="info-bar">
-        <span>Session: <b id="countdown">10:00</b></span>
-        <span>Ajmer Showroom</span>
+
+    <div id="dashboardContent">
+        <div class="dashboard-container">
+            <div class="header-flex">
+                <h2 style="color:var(--primary); margin:0;">Admin Panel</h2>
+                <div class="btn-group">
+                    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️ Day Mode</button>
+                    <button class="refresh-btn" onclick="fetchLeads()">🔄 Refresh</button>
+                </div>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:15px; color:#64748b;">
+                <span>Session: <b id="countdown">10:00</b></span>
+                <span>Ajmer Showroom</span>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr><th>Date</th><th>Customer</th><th>Inquiry</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+        </div>
     </div>
-    <div class="table-responsive">
-        <table id="adminTable">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Customer</th>
-                    <th>Inquiry</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody"></tbody>
-        </table>
-    </div>
-</div>
 
 <script>
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw7bN2vXRY_BLYr1Lo7brDX6O0MQ8R-WlGBmiBlPCYl1NHqMVQ4IQKf0uSAiz2_XnrHuA/exec';
@@ -62,43 +103,48 @@
     const ADMIN_PASS = "Ajmer786";
     let timeLeft = 600;
 
-    // --- Ek hi window.onload rahega ---
-    window.onload = function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const userKey = urlParams.get('key');
-
-        // 1. Key Check
-        if (userKey !== ADMIN_KEY) {
-            document.body.innerHTML = "<div style='color:white; text-align:center; margin-top:100px;'><h1>🛑 404 Access Denied</h1><p>Invalid Security Key.</p></div>";
-            document.body.style.display = "block";
-            return; 
-        }
-
-        // 2. Password Check
-        const pass = prompt("Enter Admin Password:");
-        if (pass === ADMIN_PASS) {
-            document.body.style.display = 'block';
-            fetchLeads(); 
-            startTimer(); 
+    // --- Theme Toggle Logic ---
+    function toggleTheme() {
+        const body = document.body;
+        const btn = document.getElementById('themeBtn');
+        body.classList.toggle('light-mode');
+        
+        if (body.classList.contains('light-mode')) {
+            btn.innerText = "🌙 Night Mode";
+            localStorage.setItem('maa_theme', 'light');
         } else {
-            alert("Wrong Password!");
-            window.location.href = "https://google.com";
+            btn.innerText = "☀️ Day Mode";
+            localStorage.setItem('maa_theme', 'dark');
+        }
+    }
+
+    // Load saved theme
+    window.onload = function() {
+        if (localStorage.getItem('maa_theme') === 'light') {
+            document.body.classList.add('light-mode');
+            document.getElementById('themeBtn').innerText = "🌙 Night Mode";
         }
     };
 
-    function startTimer() {
-        setInterval(() => {
-            timeLeft--;
-            let m = Math.floor(timeLeft/60);
-            let s = timeLeft%60;
-            document.getElementById('countdown').innerText = `${m}:${s<10?'0':''}${s}`;
-            if(timeLeft <= 0) window.location.reload();
-        }, 1000);
+    function checkAccess() {
+        const key = document.getElementById('inputKey').value;
+        const pass = document.getElementById('inputPass').value;
+
+        if (key === ADMIN_KEY && pass === ADMIN_PASS) {
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('dashboardContent').style.display = 'block';
+            document.body.style.alignItems = 'flex-start'; 
+            fetchLeads(); 
+            startTimer(); 
+        } else {
+            alert("Invalid Credentials!");
+            window.location.reload();
+        }
     }
 
     async function fetchLeads() {
         const tableBody = document.getElementById('tableBody');
-        tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center">Loading...</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center">Loading Data...</td></tr>';
         try {
             const response = await fetch(`${SCRIPT_URL}?key=${ADMIN_KEY}`);
             const data = await response.json();
@@ -108,23 +154,35 @@
                     <td>${new Date(item.Timestamp).toLocaleDateString()}</td>
                     <td><b>${item.Name}</b><br><small>${item.Phone}</small></td>
                     <td>${item.Message}</td>
-                    <td class="actions">
-                        <a href="https://wa.me/${item.Phone}" class="btn-wa" target="_blank">WA</a>
-                        <button onclick="deleteRow(${item.rowNum})" class="btn-del">Del</button>
+                    <td>
+                        <div style="display:flex; gap:5px;">
+                            <a href="https://wa.me/${item.Phone}" class="btn-wa" target="_blank">WA</a>
+                            <button onclick="deleteRow(${item.rowNum})" class="btn-del">Del</button>
+                        </div>
                     </td>
                 </tr>`;
             });
             tableBody.innerHTML = html;
         } catch(e) {
-            tableBody.innerHTML = '<tr><td colspan="4">Error Loading Data!</td></tr>';
+            tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Error Loading!</td></tr>';
         }
     }
 
     async function deleteRow(id) {
-        if(confirm("Lead remove karein?")) {
+        if(confirm("Enquiry delete karein?")) {
             await fetch(`${SCRIPT_URL}?action=delete&row=${id}&key=${ADMIN_KEY}`, {method: 'POST'});
             fetchLeads();
         }
+    }
+
+    function startTimer() {
+        setInterval(() => {
+            timeLeft--;
+            let m = Math.floor(timeLeft/60);
+            let s = timeLeft%60;
+            document.getElementById('countdown').innerText = `${m}:${s<10?'0':''}${s}`;
+            if(timeLeft <= 0) window.location.reload();
+        }, 1000);
     }
 </script>
 </body>
