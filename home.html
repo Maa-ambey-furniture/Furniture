@@ -94,45 +94,56 @@
 </footer>
 
 <script>
-    // --- 1. FORM SUBMISSION (Fixed 'message' error) ---
+    <section class="enquiry-section">
+    <h2 style="color: white;">Get a Free Quote</h2>
+    <form class="horizontal-form" id="enquiryForm">
+        <input type="text" placeholder="Aapka Naam" required> <input type="tel" placeholder="Mobile Number" required> <input type="text" placeholder="Service (e.g. Sofa Polish)" required> <button type="submit" id="submitBtn" class="submit-btn">Send Enquiry</button>
+    </form>
+</section>
+
+<script>
+    // --- 1. FORM SUBMISSION LOGIC ---
     document.getElementById('enquiryForm').addEventListener('submit', function(e) {
         e.preventDefault();
-        const btn = e.target.querySelector('button');
-        btn.innerText = "Sending..."; btn.disabled = true;
+        
+        // Button ID se control
+        const btn = document.getElementById('submitBtn');
+        btn.innerHTML = '⏳ Sending...'; 
+        btn.disabled = true;
 
-        const name = e.target[0].value;
-        const phone = e.target[1].value;
-        const service = e.target[2].value;
+        // Inputs se data lena
+        const nameVal = e.target[0].value;
+        const phoneVal = e.target[1].value;
+        const serviceVal = e.target[2].value;
 
         const formData = new FormData();
-        formData.append('name', name);
-        formData.append('phone', phone);
-        formData.append('msg', service); // FIX: Changed 'message' to 'service'
+        formData.append('name', nameVal);   // Column A: Name
+        formData.append('phone', phoneVal); // Column B: Phone
+        formData.append('msg', serviceVal); // Column C: Message
 
-        fetch('https://script.google.com/macros/s/AKfycbw7bN2vXRY_BLYr1Lo7brDX6O0MQ8R-WlGBmiBlPCYl1NHqMVQ4IQKf0uSAiz2_XnrHuA/exec', { method: 'POST', body: formData })
+        // Yahan apna naya Deployment URL zaroor dalein
+        fetch('https://script.google.com/macros/s/AKfycbw7bN2vXRY_BLYr1Lo7brDX6O0MQ8R-WlGBmiBlPCYl1NHqMVQ4IQKf0uSAiz2_XnrHuA/exec', { 
+            method: 'POST', 
+            body: formData 
+        })
         .then(() => {
             alert("Dhanyawad! Maa Ambey Furniture mein aapki enquiry save ho gayi hai.");
-            const waMsg = `Pranam! Maa Ambey Furniture, Ajmer.%0AName: ${name}%0APhone: ${phone}%0AService: ${service}`;
+            
+            // WhatsApp Redirect
+            const waMsg = `Pranam! Maa Ambey Furniture, Ajmer.%0AName: ${nameVal}%0APhone: ${phoneVal}%0AService: ${serviceVal}`;
             window.open(`https://wa.me/918078619566?text=${waMsg}`, '_blank');
+            
             e.target.reset();
-            btn.innerText = "Send Enquiry"; btn.disabled = false;
+            btn.innerHTML = 'Send Enquiry';
+            btn.disabled = false;
         })
-        .catch(() => {
-            alert("Error! Data nahi bheja ja saka.");
-            btn.innerText = "Send Enquiry"; btn.disabled = false;
-        });
-    });
-    // Form submit hone par button ka look badle
-    const btn = e.target.querySelector('button');
-    btn.innerHTML = '<span>⏳ Sending...</span>'; // Spinner emoji ke saath
-    btn.disabled = true;
-
-// Success hone par wapas normal karein
-.then(() => {
-    btn.innerHTML = 'Send Enquiry';
-    btn.disabled = false;
-    // ... baki ka logic ...
-});
+        .catch((err) => {
+            console.error("Error:", err);
+            alert("Kshama karein! Data nahi bheja ja saka.");
+            btn.innerHTML = 'Send Enquiry';
+            btn.disabled = false;
+        })
+        
     // --- 2. HOLI EXPERIENCE & MUSIC AUTO-STOP ---
     let colorInterval;
     const canvas = document.getElementById('smokeCanvas');
