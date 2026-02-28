@@ -80,9 +80,9 @@
 <section class="enquiry-section">
     <h2>Get a Free Quote</h2>
     <form class="horizontal-form" id="enquiryForm">
-        <input type="text" placeholder="Aapka Naam" required>
+        <input type="text" name="Name"placeholder="Aapka Naam" required>
         <input type="tel" placeholder="Mobile Number" required>
-        <input type="text" placeholder="Service (e.g. Sofa Repair)" required>
+        <input type="text" placeholder="Services"(e.g. Sofa Repair)" required>
         <button type="submit" class="submit-btn">Send Enquiry</button>
     </form>
 </section>
@@ -111,7 +111,7 @@
         .then(() => {
             alert("Dhanyawad! Maa Ambey Furniture mein aapki enquiry save ho gayi hai.");
             const waMsg = `Pranam! Maa Ambey Furniture, Ajmer.%0AName: ${name}%0APhone: ${phone}%0AService: ${service}`;
-            window.open(`https://wa.me/91XXXXXXXXXX?text=${waMsg}`, '_blank'); // Admin Phone
+            window.open(`https://wa.me/918078619566?text=${waMsg}`, '_blank'); // Admin Phone
             e.target.reset();
             btn.innerText = "Send Enquiry"; btn.disabled = false;
         })
