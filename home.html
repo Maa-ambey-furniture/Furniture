@@ -29,6 +29,18 @@
         .submit-btn:disabled { background: #64748b; cursor: not-allowed; }
         footer { background: linear-gradient(135deg, #ff4b2b 0%, #000 100%); color: white; padding: 40px 5%; text-align: center; }
         @media (max-width: 768px) { .sidebar-menu { width: 100%; } .slider-box { height: 300px; } }
+        /* Sending Button Animation */
+@keyframes pulse-white {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(0.95); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.submit-btn:disabled {
+    background: #475569 !important;
+    animation: pulse-white 1.5s infinite ease-in-out;
+    cursor: wait;
+}
     </style>
 </head>
 <body>
@@ -110,7 +122,17 @@
             btn.innerText = "Send Enquiry"; btn.disabled = false;
         });
     });
+    // Form submit hone par button ka look badle
+    const btn = e.target.querySelector('button');
+    btn.innerHTML = '<span>⏳ Sending...</span>'; // Spinner emoji ke saath
+    btn.disabled = true;
 
+// Success hone par wapas normal karein
+.then(() => {
+    btn.innerHTML = 'Send Enquiry';
+    btn.disabled = false;
+    // ... baki ka logic ...
+});
     // --- 2. HOLI EXPERIENCE & MUSIC AUTO-STOP ---
     let colorInterval;
     const canvas = document.getElementById('smokeCanvas');
