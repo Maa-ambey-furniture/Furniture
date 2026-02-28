@@ -97,6 +97,31 @@
     
     let timeLeft = 600;
 
+    window.onload = function() {
+    // 1. URL se 'key' uthana
+    const urlParams = new URLSearchParams(window.location.search);
+    const userKey = urlParams.get('key');
+
+    // 2. Security Check: Agar key galat hai ya nahi hai
+    if (userKey !== "MA_786_SECURE") {
+        // Direct kholne par error message dikhayega aur page blank kar dega
+        document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:50px;'>404 - Page Not Found or Access Denied!</h1>";
+        document.body.style.display = "block";
+        return; 
+    }
+
+    // 3. Agar Key sahi hai, tabhi Password mangega
+    const pass = prompt("Enter Admin Password:");
+    if (pass === "Ajmer786") {
+        document.getElementById('adminBody').style.display = 'block';
+        fetchLeads(); // Data fetch karna shuru karega
+        startTimer(); // Auto-logout timer shuru karega
+    } else {
+        alert("Wrong Password!");
+        window.location.href = "https://google.com";
+    }
+};
+
     // Security check logic
     function init() {
         const pass = prompt("Enter Admin Password:");
