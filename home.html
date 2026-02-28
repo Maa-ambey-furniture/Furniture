@@ -8,14 +8,13 @@
         :root { --primary-grad: linear-gradient(90deg, #ff4b2b 0%, #ff416c 100%); --dark: #0f172a; }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; background: #f8fafc; overflow-x: hidden; }
         
-        /* --- 1. Header --- */
+        /* --- 1. Header & Branding --- */
         header { background: #fff; padding: 10px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
         .logo-text h1 { background: var(--primary-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; font-size: 22px; font-weight: 900; }
 
         /* --- 2. Hero Section (Sidebar + Slider) --- */
         .hero-container { display: flex; flex-wrap: wrap; background: #fff; }
         .sidebar-menu { width: 260px; background: var(--dark); color: white; padding: 25px; }
-        .sidebar-menu h3 { color: #ff416c; border-bottom: 1px solid #334155; padding-bottom: 10px; }
         .sidebar-menu ul { list-style: none; padding: 0; }
         .sidebar-menu li { padding: 12px 0; border-bottom: 1px solid #1e293b; cursor: pointer; transition: 0.3s; }
         .sidebar-menu li:hover { color: #ff4b2b; padding-left: 10px; }
@@ -24,18 +23,19 @@
         .slider-img { width: 100%; height: 100%; object-fit: cover; transition: opacity 0.8s; }
         .slider-overlay { position: absolute; bottom: 0; width: 100%; background: linear-gradient(transparent, rgba(0,0,0,0.8)); padding: 40px 20px; color: white; }
 
-        /* --- 3. Holi & Smoke Overlay --- */
-        #holiOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 1.5s; }
+        /* --- 3. Holi Overlay & Smoke --- */
+        #holiOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 1.5s; }
         #smokeCanvas { position: absolute; inset: 0; pointer-events: none; }
-        .play-btn { background: var(--primary-grad); color: white; border: none; padding: 12px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; margin-top: 20px; z-index: 10; }
+        .play-btn { background: var(--primary-grad); color: white; border: none; padding: 12px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; margin-top: 20px; z-index: 10; box-shadow: 0 4px 15px rgba(255, 75, 43, 0.4); }
         .color-drop { position: absolute; width: 10px; height: 10px; border-radius: 50%; animation: fall linear forwards; opacity: 0.6; }
         @keyframes fall { to { transform: translateY(100vh) rotate(360deg); opacity: 0; } }
 
-        /* --- 4. Form --- */
+        /* --- 4. Lead Form Section --- */
         .enquiry-section { background: var(--primary-grad); padding: 40px 5%; color: white; text-align: center; }
         .horizontal-form { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 1000px; margin: auto; }
-        .horizontal-form input { padding: 12px; border: none; border-radius: 8px; flex: 1; min-width: 200px; }
-        .submit-btn { background: var(--dark); color: white; border: none; padding: 12px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .horizontal-form input { padding: 12px; border: none; border-radius: 8px; flex: 1; min-width: 200px; color: #333; }
+        .submit-btn { background: var(--dark); color: white; border: none; padding: 12px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .submit-btn:disabled { background: #64748b; cursor: not-allowed; }
 
         footer { background: linear-gradient(135deg, #ff4b2b 0%, #000 100%); color: white; padding: 40px 5%; text-align: center; }
         @media (max-width: 768px) { .sidebar-menu { width: 100%; } .slider-box { height: 300px; } }
@@ -47,7 +47,7 @@
     <canvas id="smokeCanvas"></canvas>
     <div id="loader" style="border: 4px solid #333; border-top: 4px solid #ff4b2b; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite;"></div>
     <div id="holiWish" style="display: none; text-align: center; z-index: 5;">
-        <img src="https://img.freepik.com/free-vector/happy-holi-festival-colors-greeting-background_1017-31038.jpg" style="max-width: 70%; border-radius: 15px;">
+        <img src="https://img.freepik.com/free-vector/happy-holi-festival-colors-greeting-background_1017-31038.jpg" style="max-width: 70%; border-radius: 15px; box-shadow: 0 0 20px #ff4b2b;">
         <h2 style="color: white; margin-top: 15px;">MAA AMBEY FURNITURE</h2>
         <button class="play-btn" onclick="startExperience()">🎵 Enter & Play Music</button>
     </div>
@@ -82,34 +82,17 @@
     <form class="horizontal-form" id="enquiryForm">
         <input type="text" placeholder="Aapka Naam" required>
         <input type="tel" placeholder="Mobile Number" required>
-        <input type="text" placeholder="Service Needed" required>
+        <input type="text" placeholder="Service (e.g. Sofa Repair)" required>
         <button type="submit" class="submit-btn">Send Enquiry</button>
     </form>
 </section>
 
 <footer>
-    <p>© 2026 Maa Ambey Furniture | Ajmer Showroom</p>
+    <p>© 2026 Maa Ambey Furniture | High-Quality Interior & Repair</p>
 </footer>
 
 <script>
-    // --- 1. SLIDER LOGIC ---
-    const slides = [
-        {img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1000", title: "Premium Sofa Designs"},
-        {img: "https://images.unsplash.com/photo-1505691723518-36a5ac3be353?w=1000", title: "Luxury Bed Collection"},
-        {img: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=1000", title: "Modern Modular Kitchen"}
-    ];
-    let sIdx = 0;
-    setInterval(() => {
-        sIdx = (sIdx + 1) % slides.length;
-        document.getElementById('sliderImg').style.opacity = '0';
-        setTimeout(() => {
-            document.getElementById('sliderImg').src = slides[sIdx].img;
-            document.getElementById('sliderTitle').innerText = slides[sIdx].title;
-            document.getElementById('sliderImg').style.opacity = '1';
-        }, 400);
-    }, 4000);
-
-    // --- 2. FORM LOGIC (Sheet + WhatsApp) ---
+    // --- 1. FORM SUBMISSION (Sheet + WhatsApp Fix) ---
     document.getElementById('enquiryForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const btn = e.target.querySelector('button');
@@ -120,23 +103,31 @@
         const service = e.target[2].value;
 
         const formData = new FormData();
-        formData.append('name', name); formData.append('phone', phone); formData.append('service', service);
+        formData.append('name', name);
+        formData.append('phone', phone);
+        formData.append('msg', message); // Yeh value Sheet ke 'Message' column mein jayegi
 
-        fetch('  https://script.google.com/macros/s/AKfycbw7bN2vXRY_BLYr1Lo7brDX6O0MQ8R-WlGBmiBlPCYl1NHqMVQ4IQKf0uSAiz2_XnrHuA/exec', { method: 'POST', body: formData })
+        fetch('https://script.google.com/macros/s/AKfycbw7bN2vXRY_BLYr1Lo7brDX6O0MQ8R-WlGBmiBlPCYl1NHqMVQ4IQKf0uSAiz2_XnrHuA/exec', { method: 'POST', body: formData })
         .then(() => {
-            alert("Dhanyawad! Form save ho gaya hai.");
-            const waLink = `https://wa.me/91XXXXXXXXXX?text=Pranam!%0AName: ${name}%0APhone: ${phone}%0AService: ${service}`;
-            window.open(waLink, '_blank');
-            e.target.reset(); btn.innerText = "Send Enquiry"; btn.disabled = false;
-        }).catch(() => alert("Error! Please try again."));
-    });
+            alert("Dhanyawad! Maa Ambey Furniture mein aapki enquiry save ho gayi hai.");
+            const waMsg = `Pranam! Maa Ambey Furniture, Ajmer.%0AName: ${name}%0APhone: ${phone}%0AService: ${service}`;
+            window.open(`https://wa.me/91XXXXXXXXXX?text=${waMsg}`, '_blank'); // Admin Phone
+            e.target.reset();
+            btn.innerText = "Send Enquiry"; btn.disabled = false;
+        })
+        .catch(() => {
+            alert("Error! Data nahi bheja ja saka.");
+            btn.innerText = "Send Enquiry"; btn.disabled = false;
+        });
     });
 
-    // --- 3. HOLI & SMOKE LOGIC ---
+    // --- 2. HOLI EXPERIENCE & MUSIC AUTO-STOP ---
+    let colorInterval;
     const canvas = document.getElementById('smokeCanvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
     let particles = [];
+
     class Particle {
         constructor() {
             this.x = Math.random()*canvas.width; this.y = canvas.height+50;
@@ -146,35 +137,34 @@
         update() { this.y -= this.speedY; if (this.opacity > 0) this.opacity -= 0.002; }
         draw() { ctx.globalAlpha = this.opacity; ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fill(); }
     }
+
     function animate() {
         ctx.clearRect(0,0,canvas.width,canvas.height);
         if(particles.length < 40) particles.push(new Particle());
         particles.forEach((p,i) => { p.update(); p.draw(); if(p.opacity <= 0) particles.splice(i,1); });
         if(document.getElementById('holiOverlay').style.display !== 'none') requestAnimationFrame(animate);
     }
-    function startExperience() {
-    const music = document.getElementById('holiMusic');
-    music.play();
-    
-    document.querySelector('.play-btn').style.display = 'none';
-    animate(); // Smoke shuru
-    setInterval(createDrop, 400); // Gulaal shuru
 
-    // Exact 10 second baad sab band karne ka logic
-    setTimeout(() => {
+    function startExperience() {
+        const music = document.getElementById('holiMusic');
         const overlay = document.getElementById('holiOverlay');
-        overlay.style.opacity = '0'; // Dhire se gayab hoga
+        if(music) music.play().catch(() => console.log("Music blocked"));
         
-        setTimeout(() => { 
-            overlay.style.display = 'none'; 
-            
-            // --- MUSIC STOP LOGIC ---
-            music.pause(); 
-            music.currentTime = 0; // Shuruat par wapas le jao
-            console.log("Music Stopped for Maa Ambey Site");
-        }, 1500); // Overlay animation khatam hone ka wait
-    }, 10000); // 10 second ka total time
-}
+        document.querySelector('.play-btn').style.display='none';
+        animate(); 
+        colorInterval = setInterval(createDrop, 400); // Slow-Mo Gulaal
+
+        // 10 SECOND TIMER TO STOP EVERYTHING
+        setTimeout(() => {
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                if(music) { music.pause(); music.currentTime = 0; } // Music Stop Fix
+                clearInterval(colorInterval);
+            }, 1500);
+        }, 10000);
+    }
+
     function createDrop() {
         const container = document.getElementById('colorContainer');
         const drop = document.createElement('div');
@@ -184,7 +174,41 @@
         drop.style.animationDuration = (Math.random()*4+4)+'s';
         container.appendChild(drop); setTimeout(() => drop.remove(), 8000);
     }
-    window.onload = () => { setTimeout(() => { document.getElementById('loader').style.display='none'; document.getElementById('holiWish').style.display='block'; }, 1500); };
+
+    // --- 3. LOADER SAFETY TIMER (Anti-Hang) ---
+    window.onload = () => {
+        setTimeout(() => {
+            const loader = document.getElementById('loader');
+            const wish = document.getElementById('holiWish');
+            if(loader) loader.style.display = 'none';
+            if(wish) wish.style.display = 'block';
+        }, 1500);
+
+        setTimeout(() => {
+            const overlay = document.getElementById('holiOverlay');
+            if(overlay && overlay.style.display !== 'none' && document.getElementById('holiWish').style.display === 'none') {
+                overlay.style.display = 'none'; // Force close
+            }
+        }, 5000);
+    };
+
+    // --- 4. AUTO SLIDER ---
+    const slides = [
+        {img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1000", title: "Premium Sofa Designs"},
+        {img: "https://images.unsplash.com/photo-1505691723518-36a5ac3be353?w=1000", title: "Luxury Bed Collection"}
+    ];
+    let sIdx = 0;
+    setInterval(() => {
+        sIdx = (sIdx + 1) % slides.length;
+        const img = document.getElementById('sliderImg');
+        img.style.opacity = '0';
+        setTimeout(() => {
+            img.src = slides[sIdx].img;
+            document.getElementById('sliderTitle').innerText = slides[sIdx].title;
+            img.style.opacity = '1';
+        }, 400);
+    }, 4000);
 </script>
+<style> @keyframes spin { 100% { transform: rotate(360deg); } } </style>
 </body>
 </html>
