@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAA AMBEY - Mobile Admin</title>
+    <style>
+        :root { --primary: #ff4b2b; --bg: #0f172a; --card: rgba(30, 41, 59, 0.8); --text: #f8fafc; }
+        
+        body { 
+            background: var(--bg); color: var(--text); 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; padding: 10px; display:none; 
+        }
+
+        /* Responsive Container */
+        .dashboard-container { 
+            max-width: 1000px; margin: auto; 
+            background: var(--card); backdrop-filter: blur(15px); 
+            border-radius: 15px; padding: 15px; 
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* Header Section */
+        .header-flex { 
+            display: flex; justify-content: space-between; 
+            align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;
+        }
+        h2 { font-size: 1.3rem; margin: 0; color: var(--primary); }
+        
+        .refresh-btn { 
+            background: var(--primary); border: none; color: white; 
+            padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold;
+        }
+
+        /* Timer & Stats */
+        .info-bar { font-size: 12px; color: #94a3b8; margin-bottom: 15px; display: flex; justify-content: space-between; }
+
+        /* Scrollable Table Wrapper (Mobile fix) */
+        .table-responsive { 
+            width: 100%; overflow-x: auto; 
+            -webkit-overflow-scrolling: touch; 
+            border-radius: 10px;
+        }
+
+        table { width: 100%; border-collapse: collapse; min-width: 600px; } /* Min-width ensures data doesn't squash */
+        th { text-align: left; padding: 12px; border-bottom: 2px solid var(--primary); font-size: 11px; text-transform: uppercase; color: #64748b; }
+        td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; }
+
+        /* Action Buttons */
+        .actions { display: flex; gap: 8px; }
+        .btn-wa { background: #22c55e; color: white; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 11px; font-weight: bold; }
+        .btn-del { background: #ef4444; border: none; color: white; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; }
+
+        /* Mobile specific adjustments */
+        @media (max-width: 600px) {
+            h2 { font-size: 1.1rem; }
+            td, th { padding: 10px 5px; }
+            .dashboard-container { padding: 10px; }
+        }
+    </style>
+</head>
+<body id="adminBody">
+
+<div class="dashboard-container">
+    <div class="header-flex">
+        <h2>🛋️ Maa Ambey Admin</h2>
+        <button class="refresh-btn" onclick="fetchLeads()">🔄 Refresh</button>
+    </div>
+    
+    <div class="info-bar">
+        <span>Session: <b id="countdown">10:00</b></span>
+        <span>Ajmer Showroom</span>
+    </div>
+
+    <div class="table-responsive">
+        <table id="adminTable">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Customer</th>
+                    <th>Inquiry</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw7bN2vXRY_BLYr1Lo7brDX6O0MQ8R-WlGBmiBlPCYl1NHqMVQ4IQKf0uSAiz2_XnrHuA/exec'; // Naya deployed URL yahan daalein
+    const ADMIN_KEY = "MA_786_SECURE"; // Secret key
+    const ADMIN_PASS = "Ajmer786"; // Password
+    
+    let timeLeft = 600;
+
+    // Security check logic
+    function init() {
+        const pass = prompt("Enter Admin Password:");
+        if (pass === ADMIN_PASS) {
+            document.getElementById('adminBody').style.display = 'block';
+            fetchLeads();
+            startTimer();
+        } else {
+            alert("Wrong Password!");
+            window.location.href = "https://google.com";
+        }
+    }
+
+    // Auto-Logout Timer
+    function startTimer() {
+        setInterval(() => {
+            timeLeft--;
+            let m = Math.floor(timeLeft/60);
+            let s = timeLeft%60;
+            document.getElementById('countdown').innerText = `${m}:${s<10?'0':''}${s}`;
+            if(timeLeft <= 0) window.location.reload();
+        }, 1000);
+    }
+
+    // Fetch Leads with Key
+    async function fetchLeads() {
+        const tableBody = document.getElementById('tableBody');
+        tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center">Loading...</td></tr>';
+        
+        try {
+            const response = await fetch(`${SCRIPT_URL}?key=${ADMIN_KEY}`);
+            const data = await response.json();
+            let html = '';
+            data.reverse().forEach(item => {
+                html += `<tr>
+                    <td>${new Date(item.Timestamp).toLocaleDateString()}</td>
+                    <td><b>${item.Name}</b><br><small>${item.Phone}</small></td>
+                    <td>${item.Message}</td>
+                    <td class="actions">
+                        <a href="https://wa.me/${item.Phone}" class="btn-wa">WA</a>
+                        <button onclick="deleteRow(${item.rowNum})" class="btn-del">Del</button>
+                    </td>
+                </tr>`;
+            });
+            tableBody.innerHTML = html;
+        } catch(e) {
+            tableBody.innerHTML = '<tr><td colspan="4">Error Loading Data!</td></tr>';
+        }
+    }
+
+    // Delete Row Logic
+    async function deleteRow(id) {
+        if(confirm("Lead remove karein?")) {
+            await fetch(`${SCRIPT_URL}?action=delete&row=${id}&key=${ADMIN_KEY}`, {method: 'POST'});
+            fetchLeads();
+        }
+    }
+
+    window.onload = init;
+</script>
+</body>
+</html>
