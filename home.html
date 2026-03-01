@@ -81,12 +81,15 @@
 
 <section class="enquiry-section">
     <h2>Get a Free Quote</h2>
-    <form class="horizontal-form" id="enquiryForm">
-    <input type="text" placeholder="Aapka Naam" required name="name" id="u_name" >
-    <input type="tel" placeholder="Mobile Number" required name="phone" id="u_phone" >
-    <input type="text" placeholder="Service Needed" required name="msg" id="u_msg">
-    <button type="submit" id="sub-btn" class="submit-btn">Send Enquiry</button>
-</form>
+    
+    
+    
+<form class="horizontal-form" id="enquiryForm">
+        <input type="text" placeholder="Aapka Naam" required>
+        <input type="tel" placeholder="Mobile Number" required>
+        <input type="text" placeholder="Service Needed" required>
+        <button type="submit" id="submitBtn" class="submit-btn">Send Enquiry</button>
+    </form>
 </section>
 
 <footer>
@@ -95,37 +98,34 @@
 
 <script>
     // 5. Google Sheet + WhatsApp Redirect (FIXED)
-        const scriptURL ='https://script.google.com/macros/s/AKfycbzZFSOh2MQe-PwJWzFVJ8vtdq2d0p00MKh27Fp4BH-JJP_K427lGKN-QFubfzmQmS5JlA/exec';
-        const form = document.getElementById('enquiryForm');
-        
-        form.addEventListener('submit', e => {
-            e.preventDefault();
-    // ... baaki ka fetch code ...
-            const btn = document.getElementById('sub-btn');
-            btn.innerHTML = "Processing...";
-            btn.disabled = true;
+    / Aapka naya URL
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzTvGuaTpkJ20kwZw1JxC8aB3NOm203mUq2OjpB8adrInnCKJ8pQw0Qy9Z4Znnsghlw/exec';
 
-            fetch(scriptURL, { method: 'POST', body: new FormData(form)})
-                .then(response => {
-                    const name = document.getElementById('u_name').value;
-                    const phone = document.getElementById('u_phone').value;
-                    const msg = document.getElementById('u_msg').value;
-                    
-                    // WhatsApp Link Encoding
-                    const encodedText = encodeURIComponent(`*Lead: Maa Ambey Furniture*\n*Name:* ${name}\n*Phone:* ${phone}\n*Msg:* ${msg}`);
-                    const waURL = `https://wa.me/919571646540?text=${encodedText}`;
-                    
-                    window.open(waURL, '_blank');
-                    closeModal(); 
-                    form.reset();
-                    btn.innerHTML = "Submit & Chat on WhatsApp";
-                    btn.disabled = false;
-                }).catch(() => {
-                    alert('Error! Google Script URL check karein.');
-                    btn.disabled = false;
-                    btn.innerHTML = "Submit & Chat on WhatsApp";
-                });
+    // --- 1. FORM SUBMISSION ---
+    document.getElementById('enquiryForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('submitBtn');
+        btn.innerHTML = '⏳ Sending...'; btn.disabled = true;
+
+        const name = e.target[0].value;
+        const phone = e.target[1].value;
+        const service = e.target[2].value;
+
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('phone', phone);
+        formData.append('msg', service);
+
+        fetch(scriptURL, { method: 'POST', body: formData })
+        .then(() => {
+            alert("Dhanyawad! Maa Ambey Furniture mein data save ho gaya hai.");
+            window.open(`https://wa.me/918078619566?text=Pranam!%0AName: ${name}%0AService: ${service}`, '_blank');
+            e.target.reset(); btn.innerHTML = 'Send Enquiry'; btn.disabled = false;
+        }).catch(() => {
+            alert("Error! URL ya Connection check karein.");
+            btn.innerHTML = 'Send Enquiry'; btn.disabled = false;
         });
+    });
 
     // --- 2. HOLI EXPERIENCE & MUSIC AUTO-STOP ---
     let colorInterval;
