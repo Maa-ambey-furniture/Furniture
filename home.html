@@ -101,13 +101,28 @@
         formData.append('msg', e.target[2].value);
 
         fetch(scriptURL, { method: 'POST', body: formData })
-        .then(() => {
-            alert("Dhanyawad! Data save ho gaya hai.");
-            window.open(`https://wa.me/918078619566?text=Name: ${e.target[0].value}`, '_blank');
-            e.target.reset();
-            btn.innerHTML = 'Send Enquiry';
-            btn.disabled = false;
-        })
+        ..then(() => {
+    // 1. Success Message
+    alert("Dhanyawad! Maa Ambey Furniture mein aapki enquiry save ho gayi hai.");
+
+    // 2. WhatsApp Message Tyari (Encoding zaroori hai)
+    const adminNumber = "918078619566"; // Aapka number
+    const messageText = `*Pranam! Maa Ambey Furniture*%0A` + 
+                        `--------------------------%0A` +
+                        `*Name:* ${name}%0A` + 
+                        `*Phone:* ${phone}%0A` + 
+                        `*Service:* ${service}%0A` +
+                        `--------------------------%0A` +
+                        `Ajmer, Rajasthan`;
+
+    // 3. Naye Tab mein WhatsApp Kholna
+    window.open(`https://wa.me/${adminNumber}?text=${messageText}`, '_blank');
+
+    // 4. Form Reset aur Button wapas normal
+    e.target.reset();
+    btn.innerHTML = 'Send Enquiry';
+    btn.disabled = false;
+})
         .catch(() => {
             alert("Error! Naya URL check karein.");
             btn.innerHTML = 'Send Enquiry';
