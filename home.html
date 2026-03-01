@@ -83,32 +83,35 @@
 </footer>
 
 <script>
-    // FIX: Removed the extra slash that was breaking the script
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbzTvGuaTpkJ20kwZw1JxC8aB3NOm203mUq2OjpB8adrInnCKJ8pQw0Qy9Z4Znnsghlw/exec';
 
     // --- 1. FORM SUBMISSION ---
+    
+    // Naya Deployment URL yahan dalein
+    const scriptURL = '   https://script.google.com/macros/s/AKfycbyL49mj33KlpbeGGNHwTZNIBAmsHOXlpQMBaCLxHVwIIHOli57jbdSdnJ3hrMklRomF/exec';
+
     document.getElementById('enquiryForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const btn = document.getElementById('submitBtn');
-        btn.innerHTML = '⏳ Sending...'; btn.disabled = true;
-
-        const name = e.target[0].value;
-        const phone = e.target[1].value;
-        const service = e.target[2].value;
+        btn.innerHTML = '⏳ Sending...';
+        btn.disabled = true;
 
         const formData = new FormData();
-        formData.append('name', name);
-        formData.append('phone', phone);
-        formData.append('msg', service);
+        formData.append('name', e.target[0].value);
+        formData.append('phone', e.target[1].value);
+        formData.append('msg', e.target[2].value);
 
         fetch(scriptURL, { method: 'POST', body: formData })
         .then(() => {
-            alert("Dhanyawad! Maa Ambey Furniture mein data save ho gaya hai.");
-            window.open(`https://wa.me/918078619566?text=Pranam!%0AName: ${name}%0APhone: ${phone}%0AService: ${service}`, '_blank');
-            e.target.reset(); btn.innerHTML = 'Send Enquiry'; btn.disabled = false;
-        }).catch(() => {
-            alert("Error! Connection check karein.");
-            btn.innerHTML = 'Send Enquiry'; btn.disabled = false;
+            alert("Dhanyawad! Data save ho gaya hai.");
+            window.open(`https://wa.me/918078619566?text=Name: ${e.target[0].value}`, '_blank');
+            e.target.reset();
+            btn.innerHTML = 'Send Enquiry';
+            btn.disabled = false;
+        })
+        .catch(() => {
+            alert("Error! Naya URL check karein.");
+            btn.innerHTML = 'Send Enquiry';
+            btn.disabled = false;
         });
     });
 
