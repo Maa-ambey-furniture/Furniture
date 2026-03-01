@@ -83,11 +83,8 @@
 </footer>
 
 <script>
-
-    // --- 1. FORM SUBMISSION ---
-    
-    // Naya Deployment URL yahan dalein
-    const scriptURL = '   https://script.google.com/macros/s/AKfycbyL49mj33KlpbeGGNHwTZNIBAmsHOXlpQMBaCLxHVwIIHOli57jbdSdnJ3hrMklRomF/exec';
+    // FIX: Naya Deployment URL aur Variable definition
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyL49mj33KlpbeGGNHwTZNIBAmsHOXlpQMBaCLxHVwIIHOli57jbdSdnJ3hrMklRomF/exec';
 
     document.getElementById('enquiryForm').addEventListener('submit', function(e) {
         e.preventDefault();
@@ -95,42 +92,44 @@
         btn.innerHTML = '⏳ Sending...';
         btn.disabled = true;
 
+        // Definining variables for WhatsApp and Sheet
+        const nameVal = e.target[0].value;
+        const phoneVal = e.target[1].value;
+        const serviceVal = e.target[2].value;
+
         const formData = new FormData();
-        formData.append('name', e.target[0].value);
-        formData.append('phone', e.target[1].value);
-        formData.append('msg', e.target[2].value);
+        formData.append('name', nameVal);
+        formData.append('phone', phoneVal);
+        formData.append('msg', serviceVal);
 
+        // FIX: Correcting ..then to .then
         fetch(scriptURL, { method: 'POST', body: formData })
-        ..then(() => {
-    // 1. Success Message
-    alert("Dhanyawad! Maa Ambey Furniture mein aapki enquiry save ho gayi hai.");
+        .then(() => {
+            alert("Dhanyawad! Maa Ambey Furniture mein aapki enquiry save ho gayi hai.");
 
-    // 2. WhatsApp Message Tyari (Encoding zaroori hai)
-    const adminNumber = "918078619566"; // Aapka number
-    const messageText = `*Pranam! Maa Ambey Furniture*%0A` + 
-                        `--------------------------%0A` +
-                        `*Name:* ${name}%0A` + 
-                        `*Phone:* ${phone}%0A` + 
-                        `*Service:* ${service}%0A` +
-                        `--------------------------%0A` +
-                        `Ajmer, Rajasthan`;
+            const adminNumber = "918078619566";
+            const messageText = `*Pranam! Maa Ambey Furniture*%0A` + 
+                                `--------------------------%0A` +
+                                `*Name:* ${nameVal}%0A` + 
+                                `*Phone:* ${phoneVal}%0A` + 
+                                `*Service:* ${serviceVal}%0A` +
+                                `--------------------------%0A` +
+                                `Ajmer, Rajasthan`;
 
-    // 3. Naye Tab mein WhatsApp Kholna
-    window.open(`https://wa.me/${adminNumber}?text=${messageText}`, '_blank');
+            window.open(`https://wa.me/${adminNumber}?text=${messageText}`, '_blank');
 
-    // 4. Form Reset aur Button wapas normal
-    e.target.reset();
-    btn.innerHTML = 'Send Enquiry';
-    btn.disabled = false;
-})
+            e.target.reset();
+            btn.innerHTML = 'Send Enquiry';
+            btn.disabled = false;
+        })
         .catch(() => {
-            alert("Error! Naya URL check karein.");
+            alert("Error! Connection check karein.");
             btn.innerHTML = 'Send Enquiry';
             btn.disabled = false;
         });
     });
 
-    // --- 2. HOLI EXPERIENCE & AUTO-STOP ---
+    // --- HOLI & SLIDER LOGIC ---
     let colorInterval;
     const canvas = document.getElementById('smokeCanvas');
     const ctx = canvas.getContext('2d');
@@ -181,7 +180,6 @@
         container.appendChild(drop); setTimeout(() => drop.remove(), 8000);
     }
 
-    // --- 3. LOADER ---
     window.onload = () => {
         setTimeout(() => {
             document.getElementById('loader').style.display = 'none';
@@ -189,7 +187,6 @@
         }, 1500);
     };
 
-    // --- 4. AUTO SLIDER ---
     const slides = [
         {img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1000", title: "Premium Sofa Designs"},
         {img: "https://images.unsplash.com/photo-1505691723518-36a5ac3be353?w=1000", title: "Luxury Bed Collection"}
@@ -211,3 +208,4 @@
 <style> @keyframes spin { 100% { transform: rotate(360deg); } } </style>
 </body>
 </html>
+    
