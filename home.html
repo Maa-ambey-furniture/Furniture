@@ -82,11 +82,11 @@
 <section class="enquiry-section">
     <h2>Get a Free Quote</h2>
     <form class="horizontal-form" id="enquiryForm">
-        <input type="text" placeholder="Aapka Naam" required>
-        <input type="tel" placeholder="Mobile Number" required>
-        <input type="text" placeholder="Service Needed (e.g. Sofa Repair)" required>
-        <button type="submit" class="submit-btn">Send Enquiry</button>
-    </form>
+    <input type="text" placeholder="Aapka Naam" required>
+    <input type="tel" placeholder="Mobile Number" required>
+    <input type="text" placeholder="Service Needed" required>
+    <button type="submit" id="submitBtn" class="submit-btn">Send Enquiry</button>
+</form>
 </section>
 
 <footer>
@@ -94,15 +94,7 @@
 </footer>
 
 <script>
-    <section class="enquiry-section">
-    <h2 style="color: white;">Get a Free Quote</h2>
-    <form class="horizontal-form" id="enquiryForm">
-        <input type="text" placeholder="Aapka Naam" required> <input type="tel" placeholder="Mobile Number" required> <input type="text" placeholder="Service (e.g. Sofa Polish)" required> <button type="submit" id="submitBtn" class="submit-btn">Send Enquiry</button>
-    </form>
-</section>
-
-<script>
-    // --- 1. FORM SUBMISSION LOGIC ---
+    // --- 1. FORM SUBMISSION (Fixed 'message' error) ---
     document.getElementById('enquiryForm').addEventListener('submit', function(e) {
         e.preventDefault();
         
@@ -110,17 +102,14 @@
         const btn = document.getElementById('submitBtn');
         btn.innerHTML = '⏳ Sending...'; 
         btn.disabled = true;
-
         // Inputs se data lena
         const nameVal = e.target[0].value;
         const phoneVal = e.target[1].value;
         const serviceVal = e.target[2].value;
-
         const formData = new FormData();
         formData.append('name', nameVal);   // Column A: Name
         formData.append('phone', phoneVal); // Column B: Phone
         formData.append('msg', serviceVal); // Column C: Message
-
         // Yahan apna naya Deployment URL zaroor dalein
         fetch('https://script.google.com/macros/s/AKfycbw7bN2vXRY_BLYr1Lo7brDX6O0MQ8R-WlGBmiBlPCYl1NHqMVQ4IQKf0uSAiz2_XnrHuA/exec', { 
             method: 'POST', 
@@ -142,8 +131,9 @@
             alert("Kshama karein! Data nahi bheja ja saka.");
             btn.innerHTML = 'Send Enquiry';
             btn.disabled = false;
-        })
-        
+        });
+    });
+
     // --- 2. HOLI EXPERIENCE & MUSIC AUTO-STOP ---
     let colorInterval;
     const canvas = document.getElementById('smokeCanvas');
