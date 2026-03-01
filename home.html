@@ -82,10 +82,10 @@
 <section class="enquiry-section">
     <h2>Get a Free Quote</h2>
     <form class="horizontal-form" id="enquiryForm">
-    <input type="text" placeholder="Aapka Naam" required name="name">
-    <input type="tel" placeholder="Mobile Number" required name="phone">
-    <input type="text" placeholder="Service Needed" required name="msg">
-    <button type="submit" id="submitBtn" class="submit-btn">Send Enquiry</button>
+    <input type="text" placeholder="Aapka Naam" required name="name" id="u_name" >
+    <input type="tel" placeholder="Mobile Number" required name="phone" id="u_phone" >
+    <input type="text" placeholder="Service Needed" required name="msg" id="u_msg">
+    <button type="submit" id="sub-btn" class="submit-btn">Send Enquiry</button>
 </form>
 </section>
 
@@ -94,45 +94,38 @@
 </footer>
 
 <script>
-    // --- 1. FORM SUBMISSION (Fixed 'message' error) ---
-    document.getElementById('enquiryForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+    // 5. Google Sheet + WhatsApp Redirect (FIXED)
+        const scriptURL ='https://script.google.com/macros/s/AKfycbzZFSOh2MQe-PwJWzFVJ8vtdq2d0p00MKh27Fp4BH-JJP_K427lGKN-QFubfzmQmS5JlA/exec';
+        const form = document.getElementById('enquiryForm');
         
-        // Button ID se control
-        const btn = document.getElementById('submitBtn');
-        btn.innerHTML = '⏳ Sending...'; 
-        btn.disabled = true;
-        // Inputs se data lena
-        const nameVal = e.target[0].value;
-        const phoneVal = e.target[1].value;
-        const serviceVal = e.target[2].value;
-        const formData = new FormData();
-        formData.append('name', nameVal);   // Column A: Name
-        formData.append('phone', phoneVal); // Column B: Phone
-        formData.append('msg', serviceVal); // Column C: Message
-        // Yahan apna naya Deployment URL zaroor dalein
-        fetch('https://script.google.com/macros/s/AKfycbw7bN2vXRY_BLYr1Lo7brDX6O0MQ8R-WlGBmiBlPCYl1NHqMVQ4IQKf0uSAiz2_XnrHuA/exec', { 
-            method: 'POST', 
-            body: formData 
-        })
-        .then(() => {
-            alert("Dhanyawad! Maa Ambey Furniture mein aapki enquiry save ho gayi hai.");
-            
-            // WhatsApp Redirect
-            const waMsg = `Pranam! Maa Ambey Furniture, Ajmer.%0AName: ${nameVal}%0APhone: ${phoneVal}%0AService: ${serviceVal}`;
-            window.open(`https://wa.me/918078619566?text=${waMsg}`, '_blank');
-            
-            e.target.reset();
-            btn.innerHTML = 'Send Enquiry';
-            btn.disabled = false;
-        })
-        .catch((err) => {
-            console.error("Error:", err);
-            alert("Kshama karein! Data nahi bheja ja saka.");
-            btn.innerHTML = 'Send Enquiry';
-            btn.disabled = false;
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+    // ... baaki ka fetch code ...
+            const btn = document.getElementById('sub-btn');
+            btn.innerHTML = "Processing...";
+            btn.disabled = true;
+
+            fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+                .then(response => {
+                    const name = document.getElementById('u_name').value;
+                    const phone = document.getElementById('u_phone').value;
+                    const msg = document.getElementById('u_msg').value;
+                    
+                    // WhatsApp Link Encoding
+                    const encodedText = encodeURIComponent(`*Lead: Maa Ambey Furniture*\n*Name:* ${name}\n*Phone:* ${phone}\n*Msg:* ${msg}`);
+                    const waURL = `https://wa.me/919571646540?text=${encodedText}`;
+                    
+                    window.open(waURL, '_blank');
+                    closeModal(); 
+                    form.reset();
+                    btn.innerHTML = "Submit & Chat on WhatsApp";
+                    btn.disabled = false;
+                }).catch(() => {
+                    alert('Error! Google Script URL check karein.');
+                    btn.disabled = false;
+                    btn.innerHTML = "Submit & Chat on WhatsApp";
+                });
         });
-    });
 
     // --- 2. HOLI EXPERIENCE & MUSIC AUTO-STOP ---
     let colorInterval;
