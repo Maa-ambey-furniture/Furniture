@@ -1,1 +1,158 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAA AMBEY - Secure Admin</title>
+    <style>
+        :root { 
+            --primary: #ff4b2b; --bg: #0f172a; 
+            --card: rgba(30, 41, 59, 0.8); --text: #f8fafc; 
+            --border: rgba(255,255,255,0.1);
+        }
+        .light-mode {
+            --bg: #f1f5f9; --card: #ffffff; 
+            --text: #1e293b; --border: #cbd5e1;
+        }
+        body { 
+            background: var(--bg); color: var(--text); 
+            font-family: 'Segoe UI', sans-serif; margin: 0; 
+            display: flex; align-items: center; justify-content: center; min-height: 100vh;
+            transition: 0.3s;
+        }
+        .login-card {
+            background: var(--card); backdrop-filter: blur(15px);
+            padding: 40px; border-radius: 20px; border: 1px solid var(--border);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3); width: 90%; max-width: 350px; text-align: center;
+        }
+        input {
+            width: 100%; padding: 12px; margin-bottom: 15px; background: rgba(0,0,0,0.05);
+            border: 1px solid var(--border); border-radius: 8px; color: var(--text);
+            box-sizing: border-box;
+        }
+        #dashboardContent { display: none; width: 100%; padding: 20px; }
+        .dashboard-container { 
+            max-width: 1000px; margin: auto; background: var(--card); 
+            border-radius: 15px; padding: 20px; border: 1px solid var(--border);
+        }
+        .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .btn-group { display: flex; gap: 10px; }
+        .refresh-btn { background: var(--primary); border: none; color: white; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .theme-toggle { background: transparent; border: 1px solid var(--primary); color: var(--primary); padding: 8px 15px; border-radius: 8px; cursor: pointer; }
+        .table-responsive { width: 100%; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        th { text-align: left; padding: 12px; border-bottom: 2px solid var(--primary); color: #64748b; font-size: 12px; }
+        td { padding: 12px; border-bottom: 1px solid var(--border); font-size: 14px; }
+        .btn-wa { background: #22c55e; color: white; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 12px; display: inline-block; }
+        .btn-del { background: #ef4444; border: none; color: white; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+    </style>
+</head>
+<body id="mainBody">
 
+    <div id="loginSection" class="login-card">
+        <h2 style="color:var(--primary);">🛋️ MAA AMBEY</h2>
+        <input type="password" id="inputKey" placeholder="Security Key">
+        <input type="password" id="inputPass" placeholder="Admin Password">
+        <button style="width:100%; padding:12px; background:var(--primary); border:none; color:white; border-radius:8px; font-weight:bold; cursor:pointer;" onclick="checkAccess()">Login</button>
+    </div>
+
+    <div id="dashboardContent">
+        <div class="dashboard-container">
+            <div class="header-flex">
+                <h2 style="color:var(--primary); margin:0;">Admin Panel</h2>
+                <div class="btn-group">
+                    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️ Day Mode</button>
+                    <button class="refresh-btn" onclick="fetchLeads()">🔄 Refresh</button>
+                </div>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:15px; color:#64748b;">
+                <span>Session: <b id="countdown">10:00</b></span>
+                <span>Ajmer, Rajasthan</span>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr><th>Date</th><th>Customer</th><th>Inquiry (Service)</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+<script>
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyL49mj33KlpbeGGNHwTZNIBAmsHOXlpQMBaCLxHVwIIHOli57jbdSdnJ3hrMklRomF/exec';
+    const ADMIN_KEY = "MA_786_SECURE"; // Security Key
+    const ADMIN_PASS = "Ajmer786"; // Admin Pass
+    let timeLeft = 600;
+
+    function toggleTheme() {
+        const body = document.body;
+        const btn = document.getElementById('themeBtn');
+        body.classList.toggle('light-mode');
+        btn.innerText = body.classList.contains('light-mode') ? "🌙 Night Mode" : "☀️ Day Mode";
+    }
+
+    function checkAccess() {
+        const key = document.getElementById('inputKey').value;
+        const pass = document.getElementById('inputPass').value;
+        if (key === ADMIN_KEY && pass === ADMIN_PASS) {
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('dashboardContent').style.display = 'block';
+            document.body.style.alignItems = 'flex-start'; 
+            fetchLeads(); startTimer(); 
+        } else {
+            alert("Invalid Credentials!");
+            window.location.reload();
+        }
+    }
+
+    async function fetchLeads() {
+        const tableBody = document.getElementById('tableBody');
+        tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center">Loading Data...</td></tr>';
+        try {
+            const response = await fetch(`${SCRIPT_URL}?key=${ADMIN_KEY}`);
+            const data = await response.json();
+            let html = '';
+            
+            // Latest leads ko sabse upar dikhane ke liye reverse
+            data.reverse().forEach((item, index) => {
+                // item[0]=Name, item[1]=Phone, item[2]=Msg, item[3]=Time
+                html += `<tr>
+                    <td>${item[3] ? new Date(item[3]).toLocaleDateString() : 'N/A'}</td>
+                    <td><b>${item[0]}</b><br><small>${item[1]}</small></td>
+                    <td>${item[2]}</td>
+                    <td>
+                        <div style="display:flex; gap:5px;">
+                            <a href="https://wa.me/${item[1]}" class="btn-wa" target="_blank">WA</a>
+                            <button onclick="deleteRow(${data.length - index})" class="btn-del">Del</button>
+                        </div>
+                    </td>
+                </tr>`;
+            });
+            tableBody.innerHTML = html || '<tr><td colspan="4" style="text-align:center">No Data Found</td></tr>';
+        } catch(e) {
+            tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Error Loading Data!</td></tr>';
+        }
+    }
+
+    async function deleteRow(rowNum) {
+        if(confirm("Kya aap is enquiry ko delete karna chahte hain?")) {
+            // Delete logic ke liye POST request
+            await fetch(`${SCRIPT_URL}?action=delete&row=${rowNum + 1}&key=${ADMIN_KEY}`, {method: 'POST'});
+            fetchLeads();
+        }
+    }
+
+    function startTimer() {
+        setInterval(() => {
+            if(timeLeft <= 0) window.location.reload();
+            timeLeft--;
+            let m = Math.floor(timeLeft/60);
+            let s = timeLeft%60;
+            document.getElementById('countdown').innerText = `${m}:${s<10?'0':''}${s}`;
+        }, 1000);
+    }
+</script>
+</body>
+</html>
