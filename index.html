@@ -29,7 +29,21 @@
         @keyframes pulse-white { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(0.95); opacity: 0.7; } 100% { transform: scale(1); opacity: 1; } }
         .submit-btn:disabled { background: #475569 !important; animation: pulse-white 1.5s infinite ease-in-out; cursor: wait; }
         footer { background: linear-gradient(135deg, #ff4b2b 0%, #000 100%); color: white; padding: 40px 5%; text-align: center; }
-        @media (max-width: 768px) { .sidebar-menu { width: 100%; } .slider-box { height: 300px; } }
+        @media (max-width: 768px) { .sidebar-menu { width: 100%; } .slider-box { height: 300px; } 
+                                  /* ⚡ Glowing Submit Button */
+        .submit-btn {
+            position: relative; background: #000; color: white; padding: 15px 40px; 
+            border: none; border-radius: 10px; font-weight: bold; cursor: pointer; 
+            overflow: hidden; transition: 0.3s; z-index: 1; box-shadow: var(--neon-glow);
+        }
+        .submit-btn::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: conic-gradient(transparent, transparent, #ff4b2b);
+            animation: rotateLight 2s linear infinite; z-index: -2;
+        }
+        .submit-btn::after { content: ''; position: absolute; inset: 3px; background: #000; border-radius: 8px; z-index: -1; }
+        @keyframes rotateLight { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+                                  }
     </style>
 </head>
 <body>
